@@ -1,0 +1,14 @@
+sudo docker run \
+  -d \
+  --name streamloader \
+  --restart always \
+  --network host \
+%{ if gcp_logs_enabled ~}
+  --log-driver gcplogs \
+%{ else ~}
+  --log-opt max-size=10m \
+  --log-opt max-file=5 \
+%{ endif ~}
+  snowplow/snowplow-bigquery-streamloader:${version} \
+  --config ${config_base64} \
+  --resolver ${iglu_resolver_base64}

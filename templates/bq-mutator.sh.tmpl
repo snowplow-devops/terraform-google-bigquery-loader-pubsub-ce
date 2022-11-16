@@ -1,0 +1,39 @@
+# 1. Bootstrap BigQuery table with required tables
+set +e
+sudo docker run \
+  --name mutator-create \
+  --network host \
+%{ if gcp_logs_enabled ~}
+  --log-driver gcplogs \
+%{ else ~}
+  --log-opt max-size=10m \
+  --log-opt max-file=5 \
+%{ endif ~}
+  snowplow/snowplow-bigquery-mutator:${version} \
+  create \
+%{ if require_partition_filter ~}
+  --requirePartitionFilter \
+%{ endif ~}
+%{ if partition_column != "" ~}
+  --partitionColumn=${partition_column} \
+%{ endif ~}
+  --config ${config_base64} \
+  --resolver ${iglu_resolver_base64}
+set -e
+
+# 2. Listen for changes and mutate BigQuery table accordingly
+sudo docker run \
+  -d \
+  --name mutator-listen \
+  --restart always \
+  --network host \
+%{ if gcp_logs_enabled ~}
+  --log-driver gcplogs \
+%{ else ~}
+  --log-opt max-size=10m \
+  --log-opt max-file=5 \
+%{ endif ~}
+  snowplow/snowplow-bigquery-mutator:${version} \
+  listen \
+  --config ${config_base64} \
+  --resolver ${iglu_resolver_base64}

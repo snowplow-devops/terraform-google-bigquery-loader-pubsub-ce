@@ -1,0 +1,45 @@
+{
+  "projectId": ${project_id}
+
+  "loader": {
+    "input": {
+      "subscription": ${input_subscription_name}
+    }
+    "output": {
+      "good": {
+        "datasetId": ${dataset_id}
+        "tableId": ${table_id}
+      }
+      "bad": {
+        "topic": ${bad_rows_topic_name}
+      }
+      "types": {
+        "topic": ${types_topic_name}
+      }
+      "failedInserts": {
+        "topic": ${failed_inserts_topic_name}
+      }
+    }
+  }
+
+  "mutator": {
+    "input": {
+      "subscription": ${types_sub_name}
+    }
+    "output": {
+      "good": $${loader.output.good}
+    }
+  }
+
+  "repeater": {
+    "input": {
+      "subscription": ${failed_inserts_sub_name}
+    }
+    "output": {
+      "good": $${loader.output.good}
+      "deadLetters": {
+        "bucket": "gs://${gcs_dead_letter_bucket_name}"
+      }
+    }
+  }
+}
