@@ -1,23 +1,2 @@
-#!/bin/bash
-set -e -x
-
-# -----------------------------------------------------------------------------
-#  BASE INSTALL
-# -----------------------------------------------------------------------------
-
-function install_base_packages() {
-  sudo apt install wget curl unzip -y
-}
-
-function install_docker_ce() {
-  sudo apt install docker.io -y
-  sudo systemctl enable --now docker
-}
-
-sudo apt update -y
-
-install_base_packages
-install_docker_ce
-
 ${application_script}
 ${telemetry_script}

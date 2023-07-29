@@ -3,7 +3,7 @@ locals {
   module_version = "0.1.0"
 
   app_name    = "snowplow-bigquery-loader"
-  app_version = "1.5.2"
+  app_version = var.app_version
 
   local_labels = {
     name           = var.name
@@ -21,7 +21,7 @@ locals {
 
 module "telemetry" {
   source  = "snowplow-devops/telemetry/snowplow"
-  version = "0.3.0"
+  version = "0.5.0"
 
   count = var.telemetry_enabled ? 1 : 0
 
@@ -36,11 +36,6 @@ module "telemetry" {
   app_name_override_1 = "snowplow-bigquery-mutator"
   app_name_override_2 = "snowplow-bigquery-repeater"
   app_name_override_3 = "snowplow-bigquery-streamloader"
-}
-
-data "google_compute_image" "ubuntu_20_04" {
-  family  = "ubuntu-2004-lts"
-  project = "ubuntu-os-cloud"
 }
 
 # --- IAM: Service Account setup
@@ -257,6 +252,7 @@ locals {
           config_base64            = local.config_base64
           iglu_resolver_base64     = local.iglu_resolver_base64
           gcp_logs_enabled         = var.gcp_logs_enabled
+          java_opts                = var.java_opts
         })
         telemetry_script = join("", module.telemetry.*.gcp_ubuntu_20_04_user_data_1)
       })
@@ -272,6 +268,7 @@ locals {
           config_base64        = local.config_base64
           iglu_resolver_base64 = local.iglu_resolver_base64
           gcp_logs_enabled     = var.gcp_logs_enabled
+          java_opts            = var.java_opts
         })
         telemetry_script = join("", module.telemetry.*.gcp_ubuntu_20_04_user_data_2)
       })
@@ -287,6 +284,7 @@ locals {
           config_base64        = local.config_base64
           iglu_resolver_base64 = local.iglu_resolver_base64
           gcp_logs_enabled     = var.gcp_logs_enabled
+          java_opts            = var.java_opts
         })
         telemetry_script = join("", module.telemetry.*.gcp_ubuntu_20_04_user_data_3)
       })
@@ -295,65 +293,17 @@ locals {
       target_size  = var.target_size_streamloader
     }
   }
-
-  ssh_keys_metadata = <<EOF
-%{for v in var.ssh_key_pairs~}
-    ${v.user_name}:${v.public_key}
-%{endfor~}
-EOF
 }
 
-resource "google_compute_instance_template" "tpl" {
+module "service" {
+  source  = "snowplow-devops/service-ce/google"
+  version = "0.1.0"
+
   for_each = local.applications
 
-  name_prefix = "${var.name}-${each.key}-"
-  description = "This template is used to create bigquery loader ${each.key} instances"
-
-  instance_description = "${var.name}-${each.key}"
-  machine_type         = each.value.machine_type
-
-  scheduling {
-    automatic_restart   = true
-    on_host_maintenance = "MIGRATE"
-  }
-
-  disk {
-    source_image = var.ubuntu_20_04_source_image == "" ? data.google_compute_image.ubuntu_20_04.self_link : var.ubuntu_20_04_source_image
-    auto_delete  = true
-    boot         = true
-    disk_type    = "pd-standard"
-    disk_size_gb = 10
-  }
-
-  # Note: Only one of either network or subnetwork can be supplied
-  #       https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance_template#network_interface
-  network_interface {
-    network    = var.subnetwork == "" ? var.network : ""
-    subnetwork = var.subnetwork
-
-    dynamic "access_config" {
-      for_each = var.associate_public_ip_address ? [1] : []
-
-      content {
-        network_tier = "PREMIUM"
-      }
-    }
-  }
-
-  service_account {
-    email  = google_service_account.sa.email
-    scopes = ["cloud-platform"]
-  }
-
-  metadata_startup_script = each.value.metadata_startup_script
-
-  metadata = {
-    block-project-ssh-keys = var.ssh_block_project_keys
-
-    ssh-keys = local.ssh_keys_metadata
-  }
-
-  tags = ["${var.name}-${each.key}"]
+  user_supplied_script        = each.value.metadata_startup_script
+  name                        = "${var.name}-${each.key}"
+  instance_group_version_name = "${local.app_name}-${local.app_version}"
 
   labels = merge(
     local.labels,
@@ -362,37 +312,15 @@ resource "google_compute_instance_template" "tpl" {
     }
   )
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+  region     = var.region
+  network    = var.network
+  subnetwork = var.subnetwork
 
-resource "google_compute_region_instance_group_manager" "grp" {
-  for_each = local.applications
-
-  name = "${var.name}-${each.key}-grp"
-
-  base_instance_name = "${var.name}-${each.key}"
-  region             = var.region
-
-  target_size = each.value.target_size
-
-  version {
-    name              = "${local.app_name}-${each.key}-${local.app_version}"
-    instance_template = google_compute_instance_template.tpl[each.key].self_link
-  }
-
-  update_policy {
-    type                  = "PROACTIVE"
-    minimal_action        = "REPLACE"
-    max_unavailable_fixed = 3
-  }
-
-  wait_for_instances = true
-
-  timeouts {
-    create = "20m"
-    update = "20m"
-    delete = "30m"
-  }
+  ubuntu_20_04_source_image   = var.ubuntu_20_04_source_image
+  machine_type                = each.value.machine_type
+  target_size                 = each.value.target_size
+  ssh_block_project_keys      = var.ssh_block_project_keys
+  ssh_key_pairs               = var.ssh_key_pairs
+  service_account_email       = google_service_account.sa.email
+  associate_public_ip_address = var.associate_public_ip_address
 }
