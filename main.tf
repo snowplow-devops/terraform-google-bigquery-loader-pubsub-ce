@@ -1,6 +1,6 @@
 locals {
   module_name    = "bigquery-loader-pubsub-ce"
-  module_version = "0.1.0"
+  module_version = "0.2.0"
 
   app_name    = "snowplow-bigquery-loader"
   app_version = var.app_version
