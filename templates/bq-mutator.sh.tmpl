@@ -27,12 +27,14 @@ sudo docker run \
   --name mutator-listen \
   --restart always \
   --network host \
+  --memory=$(get_application_memory_mb)m \
 %{ if gcp_logs_enabled ~}
   --log-driver gcplogs \
 %{ else ~}
   --log-opt max-size=10m \
   --log-opt max-file=5 \
 %{ endif ~}
+  --env JDK_JAVA_OPTIONS='${java_opts}' \
   snowplow/snowplow-bigquery-mutator:${version} \
   listen \
   --config ${config_base64} \
