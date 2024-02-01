@@ -1,3 +1,14 @@
+variable "accept_limited_use_license" {
+  description = "Acceptance of the SLULA terms (https://docs.snowplow.io/limited-use-license-1.0/)"
+  type        = bool
+  default     = false
+
+  validation {
+    condition     = var.accept_limited_use_license
+    error_message = "Please accept the terms of the Snowplow Limited Use License Agreement to proceed."
+  }
+}
+
 variable "name" {
   description = "A name which will be pre-pended to the resources created"
   type        = string

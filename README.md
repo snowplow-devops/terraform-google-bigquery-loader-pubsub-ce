@@ -58,6 +58,8 @@ resource "google_storage_bucket" "dead_letter_bucket" {
 module "bigquery_loader_pubsub" {
   source  = "snowplow-devops/bigquery-loader-pubsub-ce/google"
 
+  accept_limited_use_license = true
+
   name       = "bq-loader-server"
   project_id = var.project_id
 
@@ -139,6 +141,7 @@ module "bigquery_loader_pubsub" {
 | <a name="input_network"></a> [network](#input\_network) | The name of the network to deploy within | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project ID in which the stack is being deployed | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The name of the region to deploy within | `string` | n/a | yes |
+| <a name="input_accept_limited_use_license"></a> [accept\_limited\_use\_license](#input\_accept\_limited\_use\_license) | Acceptance of the SLULA terms (https://docs.snowplow.io/limited-use-license-1.0/) | `bool` | `false` | no |
 | <a name="input_app_version"></a> [app\_version](#input\_app\_version) | App version to use. This variable facilitates dev flow, the modules may not work with anything other than the default value. | `string` | `"1.5.2"` | no |
 | <a name="input_associate_public_ip_address"></a> [associate\_public\_ip\_address](#input\_associate\_public\_ip\_address) | Whether to assign a public ip address to this instance; if false this instance must be behind a Cloud NAT to connect to the internet | `bool` | `true` | no |
 | <a name="input_bigquery_partition_column"></a> [bigquery\_partition\_column](#input\_bigquery\_partition\_column) | The partition column to use in the dataset | `string` | `"collector_tstamp"` | no |
@@ -172,15 +175,9 @@ module "bigquery_loader_pubsub" {
 
 # Copyright and license
 
-The Terraform Google BigQuery Loader on Compute Engine project is Copyright 2022-present Snowplow Analytics Ltd.
+Copyright 2022-present Snowplow Analytics Ltd.
 
-Licensed under the [Snowplow Community License](https://docs.snowplow.io/community-license-1.0). _(If you are uncertain how it applies to your use case, check our answers to [frequently asked questions](https://docs.snowplow.io/docs/contributing/community-license-faq/).)_
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+Licensed under the [Snowplow Limited Use License Agreement][license]. _(If you are uncertain how it applies to your use case, check our answers to [frequently asked questions][license-faq].)_
 
 [release]: https://github.com/snowplow-devops/terraform-google-bigquery-loader-pubsub-ce/releases/latest
 [release-image]: https://img.shields.io/github/v/release/snowplow-devops/terraform-google-bigquery-loader-pubsub-ce
@@ -188,8 +185,9 @@ limitations under the License.
 [ci]: https://github.com/snowplow-devops/terraform-google-bigquery-loader-pubsub-ce/actions?query=workflow%3Aci
 [ci-image]: https://github.com/snowplow-devops/terraform-google-bigquery-loader-pubsub-ce/workflows/ci/badge.svg
 
-[license]: https://docs.snowplow.io/docs/contributing/community-license-faq/
-[license-image]: https://img.shields.io/badge/license-Snowplow--Community-blue.svg?style=flat
+[license]: https://docs.snowplow.io/limited-use-license-1.0/
+[license-image]: https://img.shields.io/badge/license-Snowplow--Limited--Use-blue.svg?style=flat
+[license-faq]: https://docs.snowplow.io/docs/contributing/limited-use-license-faq/
 
 [registry]: https://registry.terraform.io/modules/snowplow-devops/bigquery-loader-pubsub-ce/google/latest
 [registry-image]: https://img.shields.io/static/v1?label=Terraform&message=Registry&color=7B42BC&logo=terraform

@@ -11,6 +11,7 @@ sudo docker run \
   --log-opt max-file=5 \
 %{ endif ~}
   --env JDK_JAVA_OPTIONS='${java_opts}' \
+  --env ACCEPT_LIMITED_USE_LICENSE=${accept_limited_use_license} \
   snowplow/snowplow-bigquery-streamloader:${version} \
   --config ${config_base64} \
   --resolver ${iglu_resolver_base64}
