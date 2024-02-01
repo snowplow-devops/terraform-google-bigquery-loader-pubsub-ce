@@ -9,6 +9,7 @@ sudo docker run \
   --log-opt max-size=10m \
   --log-opt max-file=5 \
 %{ endif ~}
+  --env ACCEPT_LIMITED_USE_LICENSE=${accept_limited_use_license} \
   snowplow/snowplow-bigquery-mutator:${version} \
   create \
 %{ if require_partition_filter ~}
@@ -35,6 +36,7 @@ sudo docker run \
   --log-opt max-file=5 \
 %{ endif ~}
   --env JDK_JAVA_OPTIONS='${java_opts}' \
+  --env ACCEPT_LIMITED_USE_LICENSE=${accept_limited_use_license} \
   snowplow/snowplow-bigquery-mutator:${version} \
   listen \
   --config ${config_base64} \

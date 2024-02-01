@@ -246,6 +246,8 @@ locals {
     mutator = {
       metadata_startup_script = templatefile("${path.module}/templates/startup-script.sh.tmpl", {
         application_script = templatefile("${path.module}/templates/bq-mutator.sh.tmpl", {
+          accept_limited_use_license = var.accept_limited_use_license
+
           version                  = local.app_version
           require_partition_filter = var.bigquery_require_partition_filter
           partition_column         = var.bigquery_partition_column
@@ -264,6 +266,8 @@ locals {
     repeater = {
       metadata_startup_script = templatefile("${path.module}/templates/startup-script.sh.tmpl", {
         application_script = templatefile("${path.module}/templates/bq-repeater.sh.tmpl", {
+          accept_limited_use_license = var.accept_limited_use_license
+
           version              = local.app_version
           config_base64        = local.config_base64
           iglu_resolver_base64 = local.iglu_resolver_base64
@@ -280,6 +284,8 @@ locals {
     streamloader = {
       metadata_startup_script = templatefile("${path.module}/templates/startup-script.sh.tmpl", {
         application_script = templatefile("${path.module}/templates/bq-streamloader.sh.tmpl", {
+          accept_limited_use_license = var.accept_limited_use_license
+
           version              = local.app_version
           config_base64        = local.config_base64
           iglu_resolver_base64 = local.iglu_resolver_base64
