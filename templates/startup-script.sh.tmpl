@@ -1,2 +1,34 @@
-${application_script}
-${telemetry_script}
+readonly CONFIG_DIR=/opt/snowplow/config
+
+sudo mkdir -p $${CONFIG_DIR}
+
+sudo base64 --decode << EOF > $${CONFIG_DIR}/loader.hocon
+${config_b64}
+EOF
+
+sudo base64 --decode << EOF > $${CONFIG_DIR}/iglu.hocon
+${iglu_config_b64}
+EOF
+
+sudo docker run \
+  -d \
+  --name bigquery-loader \
+  --restart always \
+  --network host \
+  --memory=$(get_application_memory_mb)m \
+%{ if gcp_logs_enabled ~}
+  --log-driver gcplogs \
+%{ else ~}
+  --log-opt max-size=10m \
+  --log-opt max-file=5 \
+%{ endif ~}
+  --mount type=bind,source=$${CONFIG_DIR},target=/snowplow/config \
+  --env JDK_JAVA_OPTIONS='${java_opts}' \
+  --env ACCEPT_LIMITED_USE_LICENSE=${accept_limited_use_license} \
+%{ if bigquery_service_account_json_b64 != "" ~}
+  --env BIGQUERY_SERVICE_ACCOUNT_JSON='${bigquery_service_account_json_b64}' \
+%{ endif ~}
+  --env INSTANCE_ID=$(get_instance_id) \
+  snowplow/bigquery-loader-pubsub:${version} \
+  --config /snowplow/config/loader.hocon \
+  --iglu-config /snowplow/config/iglu.hocon
