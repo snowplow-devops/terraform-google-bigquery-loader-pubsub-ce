@@ -25,6 +25,12 @@ variable "project_id" {
   type        = string
 }
 
+variable "network_project_id" {
+  description = "The project ID of the shared VPC in which the stack is being deployed"
+  type        = string
+  default     = ""
+}
+
 variable "region" {
   description = "The name of the region to deploy within"
   type        = string
