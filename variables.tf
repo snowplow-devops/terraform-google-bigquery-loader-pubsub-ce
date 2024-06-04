@@ -14,10 +14,11 @@ variable "name" {
   type        = string
 }
 
+//TODO still RC, wait for proper release
 variable "app_version" {
   description = "App version to use. This variable facilitates dev flow, the modules may not work with anything other than the default value."
   type        = string
-  default     = "1.7.0"
+  default     = "2.0.0-rc10"
 }
 
 variable "project_id" {
@@ -100,31 +101,13 @@ variable "java_opts" {
 
 # --- Configuration options
 
-variable "machine_type_mutator" {
+variable "machine_type" {
   description = "The machine type to use"
   type        = string
   default     = "e2-small"
 }
 
-variable "machine_type_repeater" {
-  description = "The machine type to use"
-  type        = string
-  default     = "e2-small"
-}
-
-variable "target_size_repeater" {
-  description = "The number of servers to deploy"
-  default     = 1
-  type        = number
-}
-
-variable "machine_type_streamloader" {
-  description = "The machine type to use"
-  type        = string
-  default     = "e2-small"
-}
-
-variable "target_size_streamloader" {
+variable "target_size" {
   description = "The number of servers to deploy"
   default     = 1
   type        = number
@@ -135,13 +118,8 @@ variable "input_topic_name" {
   type        = string
 }
 
-variable "bad_rows_topic_name" {
-  description = "The name of the output topic for all bad data"
-  type        = string
-}
-
-variable "gcs_dead_letter_bucket_name" {
-  description = "The name of the GCS bucket to dump unloadable events into"
+variable "bad_rows_topic_id" {
+  description = "The id of the output topic for all bad data"
   type        = string
 }
 
@@ -156,18 +134,11 @@ variable "bigquery_table_id" {
   type        = string
 }
 
-variable "bigquery_require_partition_filter" {
-  description = "Whether to require a filter on the partition column in all queries"
-  default     = true
-  type        = bool
-}
-
-variable "bigquery_partition_column" {
-  description = "The partition column to use in the dataset"
-  default     = "collector_tstamp"
+variable "bigquery_service_account_json_b64" {
+  description = "Custom credentials (as base64 encoded service account key) instead of default service account assigned to the loader's compute group"
+  default     = ""
   type        = string
 }
-
 # --- Iglu Resolver
 
 variable "default_iglu_resolvers" {
@@ -209,6 +180,18 @@ variable "custom_iglu_resolvers" {
   }))
 }
 
+variable "iglu_cache_size" {
+  description = "The size of cache used by Iglu Resolvers"
+  type        = number
+  default     = 500
+}
+
+variable "iglu_cache_ttl_seconds" {
+  description = "Duration in seconds, how long should entries be kept in Iglu Resolvers cache before they expire"
+  type        = number
+  default     = 600
+}
+
 # --- Telemetry
 
 variable "telemetry_enabled" {
@@ -221,4 +204,24 @@ variable "user_provided_id" {
   description = "An optional unique identifier to identify the telemetry events emitted by this stack"
   type        = string
   default     = ""
+}
+
+# --- Webhook monitoring
+
+variable "webhook_collector" {
+  description = "Collector address used to gather monitoring alerts"
+  type        = string
+  default     = ""
+}
+
+variable "skip_schemas" {
+  description = "The list of schema keys which should be skipped (not loaded) to the warehouse"
+  type        = list(string)
+  default     = []
+}
+
+variable "healthcheck_enabled" {
+  description = "Whether or not to enable health check probe for GCP instance group"
+  type        = bool
+  default     = true
 }
