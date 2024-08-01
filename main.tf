@@ -201,6 +201,7 @@ locals {
     bigquery_service_account_json_b64 = var.bigquery_service_account_json_b64
 
     skip_schemas      = jsonencode(var.skip_schemas)
+    legacy_columns    = jsonencode(var.legacy_columns)
     webhook_collector = var.webhook_collector
     tags              = jsonencode(var.labels)
 

@@ -220,6 +220,12 @@ variable "skip_schemas" {
   default     = []
 }
 
+variable "legacy_columns" {
+  description = "Schemas for which to use the legacy column style used by the v1 BigQuery Loader. For these columns, there is a column per _minor_ version of each schema."
+  type        = list(string)
+  default     = []
+}
+
 variable "healthcheck_enabled" {
   description = "Whether or not to enable health check probe for GCP instance group"
   type        = bool
