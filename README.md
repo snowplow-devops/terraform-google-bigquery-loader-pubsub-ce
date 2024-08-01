@@ -148,6 +148,7 @@ module "bigquery_loader_pubsub" {
 | <a name="input_user_provided_id"></a> [user\_provided\_id](#input\_user\_provided\_id) | An optional unique identifier to identify the telemetry events emitted by this stack | `string` | `""` | no |
 | <a name="input_webhook_collector"></a> [webhook\_collector](#input\_webhook\_collector) | Collector address used to gather monitoring alerts | `string` | `""` | no |
 | <a name="input_skip_schemas"></a> [skip\_schemas](#input\_skip\_schemas) | The list of schema keys which should be skipped (not loaded) to the warehouse | `list(string)` | `[]` | no |
+| <a name="input_legacy_columns"></a> [legacy\_columns](#input\_legacy\_columns) | Schemas for which to use the legacy column style used by the v1 BigQuery Loader. For these columns, there is a column per _minor_ version of each schema. | `list(string)` | `[]` | no |
 | <a name="input_healthcheck_enabled"></a> [healthcheck\_enabled](#input\_healthcheck\_enabled) | Whether or not to enable health check probe for GCP instance group | `bool` | `true` | no |
 
 ## Outputs
