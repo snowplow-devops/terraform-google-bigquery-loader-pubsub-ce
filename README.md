@@ -4,6 +4,10 @@
 
 A Terraform module which deploys the requisite micro-services for loading BigQuery on Google running on top of Compute Engine.  If you want to use a custom image for this deployment you will need to ensure it is based on top of Ubuntu 20.04.
 
+## Source acknowledgement
+
+This module was originally sourced from a [community contribution](https://github.com/tnightengale/snowplow-terraform-google-big-query-loader-ce/tree/main?tab=readme-ov-file) by [Teghan Nightengale](https://github.com/tnightengale) in 2022 - big thanks for the help in getting this one started!
+
 ## Telemetry
 
 This module by default collects and forwards telemetry information to Snowplow to understand how our applications are being used.  No identifying information about your sub-account or account fingerprints are ever forwarded to us - it is very simple information about what modules and applications are deployed and active.
