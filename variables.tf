@@ -231,3 +231,9 @@ variable "healthcheck_enabled" {
   type        = bool
   default     = true
 }
+
+variable "exit_on_missing_iglu_schema" {
+  description = "Whether the loader should crash and exit if it fails to resolve an iglu schema"
+  type        = bool
+  default     = true
+}
