@@ -213,6 +213,8 @@ locals {
     telemetry_auto_gen_id      = join("", module.telemetry.*.auto_generated_id)
     telemetry_module_name      = local.module_name
     telemetry_module_version   = local.module_version
+
+    exit_on_missing_iglu_schema = var.exit_on_missing_iglu_schema
   })
 
   startup_script = templatefile("${path.module}/templates/startup-script.sh.tmpl", {
