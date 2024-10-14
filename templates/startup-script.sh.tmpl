@@ -29,6 +29,6 @@ sudo docker run \
   --env BIGQUERY_SERVICE_ACCOUNT_JSON='${bigquery_service_account_json_b64}' \
 %{ endif ~}
   --env INSTANCE_ID=$(get_instance_id) \
-  cengoguzhanunlu/bigquery-loader-pubsub:2.0.0-rc17-0-38586671-20241014-1604 \
+  cengoguzhanunlu/bigquery-loader-pubsub:2.0.0-rc17-0-38586671-20241014-1657 \
   --config /snowplow/config/loader.hocon \
   --iglu-config /snowplow/config/iglu.hocon
