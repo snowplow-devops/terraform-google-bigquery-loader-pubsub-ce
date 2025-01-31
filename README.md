@@ -105,8 +105,8 @@ module "bigquery_loader_pubsub" {
 |------|------|
 | [google_bigquery_dataset_iam_member.dataset_bigquery_data_editor_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset_iam_member) | resource |
 | [google_compute_firewall.egress](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
-| [google_compute_firewall.ingress_ssh](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_compute_firewall.ingress_health_check](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_compute_firewall.ingress_ssh](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_project_iam_member.sa_bigquery_data_editor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
 | [google_project_iam_member.sa_logging_log_writer](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
 | [google_project_iam_member.sa_pubsub_publisher](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
@@ -119,29 +119,32 @@ module "bigquery_loader_pubsub" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_bad_rows_topic_name"></a> [bad\_rows\_topic\_name](#input\_bad\_rows\_topic\_name) | The name of the output topic for all bad data | `string` | n/a | yes |
+| <a name="input_bad_rows_topic_id"></a> [bad\_rows\_topic\_id](#input\_bad\_rows\_topic\_id) | The id of the output topic for all bad data | `string` | n/a | yes |
 | <a name="input_bigquery_dataset_id"></a> [bigquery\_dataset\_id](#input\_bigquery\_dataset\_id) | The ID of the bigquery dataset to load data into | `string` | n/a | yes |
-| <a name="input_gcs_dead_letter_bucket_name"></a> [gcs\_dead\_letter\_bucket\_name](#input\_gcs\_dead\_letter\_bucket\_name) | The name of the GCS bucket to dump unloadable events into | `string` | n/a | yes |
 | <a name="input_input_topic_name"></a> [input\_topic\_name](#input\_input\_topic\_name) | The name of the input topic that contains enriched data to load | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | A name which will be pre-pended to the resources created | `string` | n/a | yes |
 | <a name="input_network"></a> [network](#input\_network) | The name of the network to deploy within | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The project ID in which the stack is being deployed | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The name of the region to deploy within | `string` | n/a | yes |
 | <a name="input_accept_limited_use_license"></a> [accept\_limited\_use\_license](#input\_accept\_limited\_use\_license) | Acceptance of the SLULA terms (https://docs.snowplow.io/limited-use-license-1.0/) | `bool` | `false` | no |
-| <a name="input_app_version"></a> [app\_version](#input\_app\_version) | App version to use. This variable facilitates dev flow, the modules may not work with anything other than the default value. | `string` | `"1.7.0"` | no |
+| <a name="input_app_version"></a> [app\_version](#input\_app\_version) | App version to use. This variable facilitates dev flow, the modules may not work with anything other than the default value. | `string` | `"2.0.0-rc10"` | no |
 | <a name="input_associate_public_ip_address"></a> [associate\_public\_ip\_address](#input\_associate\_public\_ip\_address) | Whether to assign a public ip address to this instance; if false this instance must be behind a Cloud NAT to connect to the internet | `bool` | `true` | no |
-| <a name="input_bigquery_partition_column"></a> [bigquery\_partition\_column](#input\_bigquery\_partition\_column) | The partition column to use in the dataset | `string` | `"collector_tstamp"` | no |
-| <a name="input_bigquery_require_partition_filter"></a> [bigquery\_require\_partition\_filter](#input\_bigquery\_require\_partition\_filter) | Whether to require a filter on the partition column in all queries | `bool` | `true` | no |
+| <a name="input_bigquery_service_account_json_b64"></a> [bigquery\_service\_account\_json\_b64](#input\_bigquery\_service\_account\_json\_b64) | Custom credentials (as base64 encoded service account key) instead of default service account assigned to the loader's compute group | `string` | `""` | no |
 | <a name="input_bigquery_table_id"></a> [bigquery\_table\_id](#input\_bigquery\_table\_id) | The ID of the table within a dataset to load data into (will be created if it doesn't exist) | `string` | `"events"` | no |
-| <a name="input_service_account_json_b64"></a> [bigquery\_service\_account\_json\_b64](#input\_bigquery\_service\_account\_json\_b64) | Custom credentials (as base64 encoded service account key) instead of default service account assigned to the loader's compute group | `string` | `""` | no |
-| <a name="input_custom_iglu_resolvers"></a> [custom\_iglu\_resolvers](#input\_custom\_iglu\_resolvers) | The custom Iglu Resolvers that will be used by the loader to resolve and validate events | <pre>list(object({<br>    name            = string<br>    priority        = number<br>    uri             = string<br>    api_key         = string<br>    vendor_prefixes = list(string)<br>  }))</pre> | `[]` | no |
-| <a name="input_default_iglu_resolvers"></a> [default\_iglu\_resolvers](#input\_default\_iglu\_resolvers) | The default Iglu Resolvers that will be used by the loader to resolve and validate events | <pre>list(object({<br>    name            = string<br>    priority        = number<br>    uri             = string<br>    api_key         = string<br>    vendor_prefixes = list(string)<br>  }))</pre> | <pre>[<br>  {<br>    "api_key": "",<br>    "name": "Iglu Central",<br>    "priority": 10,<br>    "uri": "http://iglucentral.com",<br>    "vendor_prefixes": []<br>  },<br>  {<br>    "api_key": "",<br>    "name": "Iglu Central - Mirror 01",<br>    "priority": 20,<br>    "uri": "http://mirror01.iglucentral.com",<br>    "vendor_prefixes": []<br>  }<br>]</pre> | no |
+| <a name="input_custom_iglu_resolvers"></a> [custom\_iglu\_resolvers](#input\_custom\_iglu\_resolvers) | The custom Iglu Resolvers that will be used by the loader to resolve and validate events | <pre>list(object({<br/>    name            = string<br/>    priority        = number<br/>    uri             = string<br/>    api_key         = string<br/>    vendor_prefixes = list(string)<br/>  }))</pre> | `[]` | no |
+| <a name="input_default_iglu_resolvers"></a> [default\_iglu\_resolvers](#input\_default\_iglu\_resolvers) | The default Iglu Resolvers that will be used by the loader to resolve and validate events | <pre>list(object({<br/>    name            = string<br/>    priority        = number<br/>    uri             = string<br/>    api_key         = string<br/>    vendor_prefixes = list(string)<br/>  }))</pre> | <pre>[<br/>  {<br/>    "api_key": "",<br/>    "name": "Iglu Central",<br/>    "priority": 10,<br/>    "uri": "http://iglucentral.com",<br/>    "vendor_prefixes": []<br/>  },<br/>  {<br/>    "api_key": "",<br/>    "name": "Iglu Central - Mirror 01",<br/>    "priority": 20,<br/>    "uri": "http://mirror01.iglucentral.com",<br/>    "vendor_prefixes": []<br/>  }<br/>]</pre> | no |
+| <a name="input_exit_on_missing_iglu_schema"></a> [exit\_on\_missing\_iglu\_schema](#input\_exit\_on\_missing\_iglu\_schema) | Whether the loader should crash and exit if it fails to resolve an iglu schema | `bool` | `true` | no |
+| <a name="input_gcp_logs_enabled"></a> [gcp\_logs\_enabled](#input\_gcp\_logs\_enabled) | Whether application logs should be reported to GCP Logging | `bool` | `true` | no |
+| <a name="input_healthcheck_enabled"></a> [healthcheck\_enabled](#input\_healthcheck\_enabled) | Whether or not to enable health check probe for GCP instance group | `bool` | `true` | no |
 | <a name="input_iglu_cache_size"></a> [iglu\_cache\_size](#input\_iglu\_cache\_size) | The size of cache used by Iglu Resolvers | `number` | `500` | no |
 | <a name="input_iglu_cache_ttl_seconds"></a> [iglu\_cache\_ttl\_seconds](#input\_iglu\_cache\_ttl\_seconds) | Duration in seconds, how long should entries be kept in Iglu Resolvers cache before they expire | `number` | `600` | no |
 | <a name="input_java_opts"></a> [java\_opts](#input\_java\_opts) | Custom JAVA Options | `string` | `"-XX:InitialRAMPercentage=75 -XX:MaxRAMPercentage=75"` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | The labels to append to this resource | `map(string)` | `{}` | no |
+| <a name="input_legacy_column_mode"></a> [legacy\_column\_mode](#input\_legacy\_column\_mode) | Whether the loader should load to legacy columns for all fields | `bool` | `false` | no |
+| <a name="input_legacy_columns"></a> [legacy\_columns](#input\_legacy\_columns) | Schemas for which to use the legacy column style used by the v1 BigQuery Loader. For these columns, there is a column per _minor_ version of each schema. | `list(string)` | `[]` | no |
 | <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | The machine type to use | `string` | `"e2-small"` | no |
 | <a name="input_network_project_id"></a> [network\_project\_id](#input\_network\_project\_id) | The project ID of the shared VPC in which the stack is being deployed | `string` | `""` | no |
+| <a name="input_skip_schemas"></a> [skip\_schemas](#input\_skip\_schemas) | The list of schema keys which should be skipped (not loaded) to the warehouse | `list(string)` | `[]` | no |
 | <a name="input_ssh_block_project_keys"></a> [ssh\_block\_project\_keys](#input\_ssh\_block\_project\_keys) | Whether to block project wide SSH keys | `bool` | `true` | no |
 | <a name="input_ssh_ip_allowlist"></a> [ssh\_ip\_allowlist](#input\_ssh\_ip\_allowlist) | The list of CIDR ranges to allow SSH traffic from | `list(any)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
 | <a name="input_ssh_key_pairs"></a> [ssh\_key\_pairs](#input\_ssh\_key\_pairs) | The list of SSH key-pairs to add to the servers | <pre>list(object({<br/>    user_name  = string<br/>    public_key = string<br/>  }))</pre> | `[]` | no |
@@ -151,9 +154,6 @@ module "bigquery_loader_pubsub" {
 | <a name="input_ubuntu_24_04_source_image"></a> [ubuntu\_24\_04\_source\_image](#input\_ubuntu\_24\_04\_source\_image) | The source image to use which must be based of of Ubuntu 24.04; by default the latest community version is used | `string` | `""` | no |
 | <a name="input_user_provided_id"></a> [user\_provided\_id](#input\_user\_provided\_id) | An optional unique identifier to identify the telemetry events emitted by this stack | `string` | `""` | no |
 | <a name="input_webhook_collector"></a> [webhook\_collector](#input\_webhook\_collector) | Collector address used to gather monitoring alerts | `string` | `""` | no |
-| <a name="input_skip_schemas"></a> [skip\_schemas](#input\_skip\_schemas) | The list of schema keys which should be skipped (not loaded) to the warehouse | `list(string)` | `[]` | no |
-| <a name="input_legacy_columns"></a> [legacy\_columns](#input\_legacy\_columns) | Schemas for which to use the legacy column style used by the v1 BigQuery Loader. For these columns, there is a column per _minor_ version of each schema. | `list(string)` | `[]` | no |
-| <a name="input_healthcheck_enabled"></a> [healthcheck\_enabled](#input\_healthcheck\_enabled) | Whether or not to enable health check probe for GCP instance group | `bool` | `true` | no |
 
 ## Outputs
 

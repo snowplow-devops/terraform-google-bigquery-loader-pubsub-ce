@@ -237,3 +237,9 @@ variable "exit_on_missing_iglu_schema" {
   type        = bool
   default     = true
 }
+
+variable "legacy_column_mode" {
+  description = "Whether the loader should load to legacy columns for all fields"
+  type        = bool
+  default     = false
+}
