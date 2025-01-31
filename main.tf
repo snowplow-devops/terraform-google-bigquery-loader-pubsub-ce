@@ -215,6 +215,8 @@ locals {
     telemetry_module_version   = local.module_version
 
     exit_on_missing_iglu_schema = var.exit_on_missing_iglu_schema
+
+    legacy_column_mode = var.legacy_column_mode
   })
 
   startup_script = templatefile("${path.module}/templates/startup-script.sh.tmpl", {
