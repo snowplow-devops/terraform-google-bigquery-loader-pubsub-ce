@@ -74,8 +74,8 @@ variable "ssh_key_pairs" {
   }))
 }
 
-variable "ubuntu_20_04_source_image" {
-  description = "The source image to use which must be based of of Ubuntu 20.04; by default the latest community version is used"
+variable "ubuntu_24_04_source_image" {
+  description = "The source image to use which must be based of of Ubuntu 24.04; by default the latest community version is used"
   default     = ""
   type        = string
 }

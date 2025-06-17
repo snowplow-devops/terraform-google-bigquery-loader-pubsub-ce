@@ -305,7 +305,7 @@ locals {
 
 module "service" {
   source  = "snowplow-devops/service-ce/google"
-  version = "0.1.0"
+  version = "0.2.0"
 
   for_each = local.applications
 
@@ -324,7 +324,7 @@ module "service" {
   network    = var.network
   subnetwork = var.subnetwork
 
-  ubuntu_20_04_source_image   = var.ubuntu_20_04_source_image
+  ubuntu_24_04_source_image   = var.ubuntu_24_04_source_image
   machine_type                = each.value.machine_type
   target_size                 = each.value.target_size
   ssh_block_project_keys      = var.ssh_block_project_keys
