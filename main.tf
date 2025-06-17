@@ -245,7 +245,7 @@ module "service" {
   network    = var.network
   subnetwork = var.subnetwork
 
-  ubuntu_20_04_source_image   = var.ubuntu_20_04_source_image
+  ubuntu_24_04_source_image   = var.ubuntu_24_04_source_image
   machine_type                = var.machine_type
   target_size                 = var.target_size
   ssh_block_project_keys      = var.ssh_block_project_keys
