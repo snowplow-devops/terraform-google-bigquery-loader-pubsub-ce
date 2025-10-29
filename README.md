@@ -2,7 +2,7 @@
 
 # terraform-google-bigquery-loader-pubsub-ce
 
-A Terraform module which deploys the BigQuery Loader application on Google running on top of Compute Engine.  If you want to use a custom image for this deployment you will need to ensure it is based on top of Ubuntu 20.04.
+A Terraform module which deploys the BigQuery Loader application on Google running on top of Compute Engine.  If you want to use a custom image for this deployment you will need to ensure it is based on top of Ubuntu 24.04.
 
 ## Source acknowledgement
 
@@ -179,7 +179,7 @@ Licensed under the [Snowplow Limited Use License Agreement][license]. _(If you a
 [ci]: https://github.com/snowplow-devops/terraform-google-bigquery-loader-pubsub-ce/actions?query=workflow%3Aci
 [ci-image]: https://github.com/snowplow-devops/terraform-google-bigquery-loader-pubsub-ce/workflows/ci/badge.svg
 
-[license]: https://docs.snowplow.io/limited-use-license-1.0/
+[license]: https://docs.snowplow.io/limited-use-license-1.1/
 [license-image]: https://img.shields.io/badge/license-Snowplow--Limited--Use-blue.svg?style=flat
 [license-faq]: https://docs.snowplow.io/docs/contributing/limited-use-license-faq/
 
