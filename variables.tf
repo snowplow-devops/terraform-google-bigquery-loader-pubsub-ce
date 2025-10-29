@@ -14,11 +14,10 @@ variable "name" {
   type        = string
 }
 
-//TODO still RC, wait for proper release
 variable "app_version" {
   description = "App version to use. This variable facilitates dev flow, the modules may not work with anything other than the default value."
   type        = string
-  default     = "2.0.0-rc10"
+  default     = "2.0.1"
 }
 
 variable "project_id" {
