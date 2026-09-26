@@ -169,7 +169,7 @@ module "bigquery_loader_pubsub" {
 
 # Copyright and license
 
-Copyright 2022-present Snowplow Analytics Ltd.
+Copyright 2022-current Snowplow Analytics Ltd.
 
 Licensed under the [Snowplow Limited Use License Agreement][license]. _(If you are uncertain how it applies to your use case, check our answers to [frequently asked questions][license-faq].)_
 
