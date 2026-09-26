@@ -1,3 +1,7 @@
+Version 0.5.1 (2026-09-26)
+--------------------------
+Update GitHub Actions to Node 24 and pin to commit SHAs
+
 Version 0.5.0 (2025-10-29)
 --------------------------
 Add streaming BigQuery Loader modules v2
